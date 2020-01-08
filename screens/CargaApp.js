@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { ScrollView, Text, Button } from "react-native";
+import { ScrollView } from "react-native";
 import styles from "../constants/Styles";
-import { Card, CardItem, Icon } from "native-base";
+import { Card, CardItem, Icon, Button, Text } from "native-base";
 import { useSelector, useDispatch } from "react-redux";
 import MenuHeader from "./MenuHeader";
 import axios from "axios";
@@ -9,8 +9,9 @@ import axios from "axios";
 function HomeScreen(props) {
   const [onLoad, setonLoad] = useState(false);
   const dispatch = useDispatch();
-  const bem = useSelector(state => state.bem);
-
+  const config = useSelector(state => state.configs);
+  const ip = config.ip;
+  console.log(ip);
   return (
     <ScrollView
       style={styles.container}
@@ -22,7 +23,7 @@ function HomeScreen(props) {
             onPress={a => {
               setonLoad(true);
               axios
-                .get("http://10.0.18.70:3000/api/bens")
+                .get("http://" + ip + "/api/bens")
                 .then(res => {
                   const arraybens = res.data;
                   dispatch({ type: "B", bens: arraybens });
@@ -33,8 +34,9 @@ function HomeScreen(props) {
             }}
             disabled={onLoad}
             activeOpacity={onLoad ? 1 : 0.5}
-            title={onLoad ? "Carregando Dados" : "Download dos Dados"}
-          ></Button>
+          >
+            <Text>{onLoad ? "Carregando Dados" : "Download dos Dados"}</Text>
+          </Button>
         </CardItem>
       </Card>
       {onLoad ? (

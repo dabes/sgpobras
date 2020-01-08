@@ -30,6 +30,7 @@ export default function BarCodeScan(props) {
   const scanned = false;
   const close = false;
   const bens = useSelector(state => state.bens);
+  const bem = useSelector(state => state.bem);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -48,7 +49,11 @@ export default function BarCodeScan(props) {
       <BarCodeScanner
         onBarCodeScanned={dados => {
           const bemencontrado = getBem(bens, dados.data);
-          dispatch({ type: "A", bem: bemencontrado });
+          dispatch({
+            type: "BARCODE",
+            bem: bemencontrado === undefined ? bem : bemencontrado,
+            code: dados.data
+          });
           props.navigation.navigate("Inventário");
         }}
         style={StyleSheet.absoluteFillObject}

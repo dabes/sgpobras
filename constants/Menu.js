@@ -1,6 +1,7 @@
 import CargaApp from "../screens/CargaApp";
 import LinksScreen from "../screens/LinksScreen";
 import BemScreen from "../screens/BemScreen";
+import Configuration from "../screens/Configuration";
 
 export default [
   {
@@ -29,5 +30,14 @@ export default [
     path: "",
     ios_icon: "ios-create",
     other_icon: "md-create"
+  },
+  {
+    id: 4,
+    routename: "Configuração",
+    screen: Configuration,
+    label: "Configuração",
+    path: "",
+    ios_icon: "ios-cog",
+    other_icon: "md-cog"
   }
 ];

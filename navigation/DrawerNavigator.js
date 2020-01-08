@@ -36,9 +36,12 @@ const MenuStack = Menu.map(item => {
   );
 });
 
-const DrawerNavigator = createDrawerNavigator({
-  ...MenuStack
-});
+const DrawerNavigator = createDrawerNavigator(
+  {
+    ...MenuStack
+  },
+  { initialRouteName: "3" }
+);
 
 DrawerNavigator.path = "";
 

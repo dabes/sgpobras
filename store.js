@@ -1,5 +1,10 @@
 import { combineReducers } from "redux";
 
+configurationInitialState = {
+  ip: "10.0.18.70:3000",
+  ccusto_selecionado: null
+};
+
 bemInitialState = {
   id: null,
   tombamento: null,
@@ -10,8 +15,7 @@ bemInitialState = {
   ccusto: null,
   photo: null,
   obs: null,
-  corrente: 0,
-  todos: 0
+  searchBem: null
 };
 
 bensInitialState = [
@@ -39,6 +43,19 @@ bensInitialState = [
   }
 ];
 
+function configs(state = configurationInitialState, action) {
+  switch (action.type) {
+    case "IP":
+      console.log(state, action);
+      state.ip = action.ip;
+      return {
+        ...state
+      };
+    default:
+      return state;
+  }
+}
+
 function bens(state = bensInitialState, action) {
   switch (action.type) {
     case "B":
@@ -54,14 +71,17 @@ function bens(state = bensInitialState, action) {
 function bem(state = bemInitialState, action) {
   switch (action.type) {
     case "A":
+      state.searchBem = state.tombamento;
       state = action.bem;
       return {
         ...state
       };
-    case "C":
-      state.corrente = action.corrente;
+    case "BARCODE":
+      state.searchBem = action.code;
+      state = action.bem;
       return {
-        ...state
+        ...state,
+        searchBem: action.code
       };
     case "D":
       state.todos = action.todos;
@@ -73,4 +93,4 @@ function bem(state = bemInitialState, action) {
   }
 }
 
-export default combineReducers({ bem, bens });
+export default combineReducers({ bem, bens, configs });

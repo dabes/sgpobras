@@ -88,9 +88,10 @@ function SearchBar(props) {
               const bemencontrado = getBem(bens, text);
               dispatch({ type: "A", bem: bemencontrado });
             }}
-            value={bem.tombamento}
+            value={bem.searchBem}
             onEndEditing={text => {
               const bemencontrado = getBem(bens, text.nativeEvent.text);
+              bem.tombamento = text.nativeEvent.text;
               dispatch({ type: "A", bem: bemencontrado });
             }}
           />
