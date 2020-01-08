@@ -9,7 +9,9 @@ bemInitialState = {
   encontrado: null,
   ccusto: null,
   photo: null,
-  obs: null
+  obs: null,
+  corrente: 0,
+  todos: 0
 };
 
 bensInitialState = [
@@ -53,6 +55,16 @@ function bem(state = bemInitialState, action) {
   switch (action.type) {
     case "A":
       state = action.bem;
+      return {
+        ...state
+      };
+    case "C":
+      state.corrente = action.corrente;
+      return {
+        ...state
+      };
+    case "D":
+      state.todos = action.todos;
       return {
         ...state
       };

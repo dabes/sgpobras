@@ -7,31 +7,39 @@ import { Ionicons } from "@expo/vector-icons";
 import AppNavigator from "./navigation/AppNavigator";
 import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
-import thunk from "redux-thunk";
-import reducer from "./store";
+// import thunk from "redux-thunk";
 import axios from "axios";
+import store, { persistor } from "./localStorage";
 
-const store = createStore(reducer, applyMiddleware(thunk));
+console.log(store);
+
+// const store = createStore(reducer, applyMiddleware(thunk));
+
+import { PersistGate } from "redux-persist/integration/react";
 
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
   if (!isLoadingComplete && !props.skipLoadingScreen) {
     return (
       <Provider store={store}>
-        <AppLoading
-          startAsync={loadResourcesAsync}
-          onError={handleLoadingError}
-          onFinish={() => handleFinishLoading(setLoadingComplete)}
-        />
+        <PersistGate loading={null} persistor={persistor}>
+          <AppLoading
+            startAsync={loadResourcesAsync}
+            onError={handleLoadingError}
+            onFinish={() => handleFinishLoading(setLoadingComplete)}
+          />
+        </PersistGate>
       </Provider>
     );
   } else {
     return (
       <Provider store={store}>
-        <View style={styles.container}>
-          {Platform.OS === "ios" && <StatusBar barStyle="default" />}
-          <AppNavigator />
-        </View>
+        <PersistGate loading={null} persistor={persistor}>
+          <View style={styles.container}>
+            {Platform.OS === "ios" && <StatusBar barStyle="default" />}
+            <AppNavigator />
+          </View>
+        </PersistGate>
       </Provider>
     );
   }

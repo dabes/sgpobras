@@ -14,8 +14,10 @@ import MenuHeader from "./MenuHeader";
 import axios from "axios";
 
 function HomeScreen(props) {
-  const dispatch = useDispatch();
   const [onLoad, setonLoad] = useState(false);
+  const dispatch = useDispatch();
+  const bem = useSelector(state => state.bem);
+
   return (
     <ScrollView
       style={styles.container}
@@ -31,8 +33,10 @@ function HomeScreen(props) {
                 .then(res => {
                   const arraybens = res.data;
                   dispatch({ type: "B", bens: arraybens });
+                  return res;
                 })
-                .then(res => setonLoad(false));
+                .then(res => setonLoad(false))
+                .catch(e => console.log(e));
             }}
             disabled={onLoad}
             activeOpacity={onLoad ? 1 : 0.5}
