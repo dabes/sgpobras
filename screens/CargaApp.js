@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  Image,
-  ScrollView,
-  Text,
-  View,
-  Button,
-  AsyncStorage
-} from "react-native";
+import { ScrollView, Text, Button } from "react-native";
 import styles from "../constants/Styles";
 import { Card, CardItem, Icon } from "native-base";
 import { useSelector, useDispatch } from "react-redux";
