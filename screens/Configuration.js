@@ -6,7 +6,6 @@ import MenuHeader from "./MenuHeader";
 
 export default function ConfigurationIp(props) {
   const config = useSelector(state => state.configs);
-  console.log(config);
   const dispatch = useDispatch();
   return (
     <Card>

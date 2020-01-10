@@ -2,8 +2,17 @@ import { combineReducers } from "redux";
 
 configurationInitialState = {
   ip: "10.0.18.70:3000",
-  ccusto_selecionado: null
+  ccusto_selecionado: 1
 };
+
+ccustoInitialState = [
+  {
+    id: -1,
+    sigla: "asxp",
+    descricao: "a",
+    unidade: "0101"
+  }
+];
 
 bemInitialState = {
   id: null,
@@ -46,8 +55,24 @@ bensInitialState = [
 function configs(state = configurationInitialState, action) {
   switch (action.type) {
     case "IP":
-      console.log(state, action);
       state.ip = action.ip;
+      return {
+        ...state
+      };
+    case "CCUSTO":
+      state.ccusto_selecionado = action.ccusto;
+      return {
+        ...state
+      };
+    default:
+      return state;
+  }
+}
+
+function ccustos(state = ccustoInitialState, action) {
+  switch (action.type) {
+    case "CARGACENTROCUSTO":
+      state = action.ccusto;
       return {
         ...state
       };
@@ -58,11 +83,12 @@ function configs(state = configurationInitialState, action) {
 
 function bens(state = bensInitialState, action) {
   switch (action.type) {
-    case "B":
+    case "CARGABEM":
       state = action.bens;
       return {
         ...state
       };
+
     default:
       return state;
   }
@@ -70,7 +96,7 @@ function bens(state = bensInitialState, action) {
 
 function bem(state = bemInitialState, action) {
   switch (action.type) {
-    case "A":
+    case "BEMENCONTRADO":
       state.searchBem = state.tombamento;
       state = action.bem;
       return {
@@ -83,8 +109,13 @@ function bem(state = bemInitialState, action) {
         ...state,
         searchBem: action.code
       };
-    case "D":
-      state.todos = action.todos;
+    case "ENCONTRADO":
+      state.encontrado = action.encontrado;
+      return {
+        ...state
+      };
+    case "BEMCCUSTO":
+      state.ccusto = action.ccusto;
       return {
         ...state
       };
@@ -93,4 +124,4 @@ function bem(state = bemInitialState, action) {
   }
 }
 
-export default combineReducers({ bem, bens, configs });
+export default combineReducers({ bem, bens, configs, ccustos });

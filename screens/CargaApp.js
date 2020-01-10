@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ScrollView } from "react-native";
+import { ScrollView, AsyncStorage } from "react-native";
 import styles from "../constants/Styles";
 import { Card, CardItem, Icon, Button, Text } from "native-base";
 import { useSelector, useDispatch } from "react-redux";
@@ -11,7 +11,7 @@ function HomeScreen(props) {
   const dispatch = useDispatch();
   const config = useSelector(state => state.configs);
   const ip = config.ip;
-  console.log(ip);
+
   return (
     <ScrollView
       style={styles.container}
@@ -22,11 +22,21 @@ function HomeScreen(props) {
           <Button
             onPress={a => {
               setonLoad(true);
+              AsyncStorage.clear();
               axios
                 .get("http://" + ip + "/api/bens")
                 .then(res => {
                   const arraybens = res.data;
-                  dispatch({ type: "B", bens: arraybens });
+                  dispatch({ type: "CARGABEM", bens: arraybens });
+                  return res;
+                })
+                .then(res => setonLoad(false))
+                .catch(e => console.log(e));
+              axios
+                .get("http://" + ip + "/api/mat")
+                .then(res => {
+                  const arraybens = res.data;
+                  dispatch({ type: "CARGACENTROCUSTO", ccusto: arraybens });
                   return res;
                 })
                 .then(res => setonLoad(false))
