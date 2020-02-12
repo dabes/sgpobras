@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "SGP Inventário",
-    "slug": "sgp_inventario",
+    "name": "SGP Obras",
+    "slug": "sgp_obras",
     "privacy": "public",
     "sdkVersion": "36.0.0",
     "platforms": [

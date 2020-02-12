@@ -6,41 +6,38 @@ import { useSelector, useDispatch } from "react-redux";
 import MenuHeader from "./MenuHeader";
 import axios from "axios";
 
-function HomeScreen(props) {
+function CargaApp(props) {
   const [onLoad, setonLoad] = useState(false);
   const dispatch = useDispatch();
   const config = useSelector(state => state.configs);
   const ip = config.ip;
-
+  const [texto, settexto] = useState("Importando Itens");
+  const [error, setError] = useState(false);
   return (
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.contentContainer}
     >
       <Card>
-        <CardItem style={styles.card}>
+        <CardItem style={(styles.card, { justifyContent: "center" })}>
           <Button
             onPress={a => {
               setonLoad(true);
               AsyncStorage.clear();
+              dispatch({ type: "IP", ip: ip });
               axios
-                .get("http://" + ip + "/api/bens")
+                .get("http://" + ip + "/api/obras")
                 .then(res => {
-                  const arraybens = res.data;
-                  dispatch({ type: "CARGABEM", bens: arraybens });
+                  const items = res.data;
+                  dispatch({ type: "CARGAOBRAS", obras: items });
                   return res;
                 })
-                .then(res => setonLoad(false))
-                .catch(e => console.log(e));
-              axios
-                .get("http://" + ip + "/api/mat")
-                .then(res => {
-                  const arraybens = res.data;
-                  dispatch({ type: "CARGACENTROCUSTO", ccusto: arraybens });
-                  return res;
-                })
-                .then(res => setonLoad(false))
-                .catch(e => console.log(e));
+                .then(res => settexto("Dados carregados com sucesso"))
+                .catch(e => {
+                  // setonLoad(false);
+                  setError(true);
+                  settexto("Não foi possível conectar ao servidor");
+                });
             }}
             disabled={onLoad}
             activeOpacity={onLoad ? 1 : 0.5}
@@ -52,8 +49,43 @@ function HomeScreen(props) {
       {onLoad ? (
         <Card>
           <CardItem style={styles.card}>
-            <Icon name="home" />
-            <Text>Importando Itens</Text>
+            {!error ? (
+              <Icon
+                ios="ios-checkmark-circle-outline"
+                android="md-checkmark-circle-outline"
+                style={{
+                  width: "100%",
+                  color: "green",
+                  fontSize: 100,
+                  textAlign: "center"
+                }}
+              />
+            ) : (
+              <Icon
+                ios="ios-alert"
+                android="md-alert"
+                style={{
+                  width: "100%",
+                  color: "red",
+                  fontSize: 100,
+                  textAlign: "center"
+                }}
+              />
+            )}
+          </CardItem>
+          <CardItem style={styles.card}>
+            <Text style={{ width: "100%", textAlign: "center" }}>{texto}</Text>
+          </CardItem>
+          <CardItem style={(styles.card, { justifyContent: "center" })}>
+            <Button
+              style={{ alignSelf: "center" }}
+              onPress={a => {
+                setonLoad(false);
+                setError(false);
+              }}
+            >
+              <Text>OK</Text>
+            </Button>
           </CardItem>
         </Card>
       ) : (
@@ -63,7 +95,7 @@ function HomeScreen(props) {
   );
 }
 
-HomeScreen.navigationOptions = ({ navigation, navigationOptions }) => {
+CargaApp.navigationOptions = ({ navigation, navigationOptions }) => {
   const { params } = navigation.state;
   return {
     headerTitle: <MenuHeader navigation={navigation} />,
@@ -71,4 +103,4 @@ HomeScreen.navigationOptions = ({ navigation, navigationOptions }) => {
   };
 };
 
-export default HomeScreen;
+export default CargaApp;

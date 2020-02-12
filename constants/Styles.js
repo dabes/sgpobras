@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: "center",
     color: "#fff",
-    width: "80%",
+    width: "67%",
     paddingRight: "20%"
   },
   headerIconTouchable: {

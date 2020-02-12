@@ -4,6 +4,7 @@ import { createStackNavigator } from "react-navigation-stack";
 import { createDrawerNavigator } from "react-navigation-drawer";
 import DrawerBarIcon from "../components/BarIcon";
 import Menu from "../constants/Menu";
+import { useSelector } from "react-redux";
 
 const config = Platform.select({
   web: { headerMode: "screen" },
@@ -36,12 +37,9 @@ const MenuStack = Menu.map(item => {
   );
 });
 
-const DrawerNavigator = createDrawerNavigator(
-  {
-    ...MenuStack
-  },
-  { initialRouteName: "3" }
-);
+const DrawerNavigator = createDrawerNavigator({
+  ...MenuStack
+});
 
 DrawerNavigator.path = "";
 
