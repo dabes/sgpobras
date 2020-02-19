@@ -29,6 +29,102 @@ function getObra(obras, text) {
   }
 }
 
+function getBensPublicosObra(obras, obra) {
+  var filtro = [];
+  for (var cada in obras) {
+    if (obras[cada].codigo == obra.codigo) {
+      filtro.push(obras[cada]);
+    }
+  }
+  return filtro;
+}
+
+function ListaBens(props) {
+  const bens = props.bens;
+  var filtro = [];
+  for (var cada in bens) {
+    filtro.push(bens[cada]);
+  }
+  return (
+    <View style={{ flex: 1 }}>
+      <FlatList
+        data={filtro}
+        style={{ flex: 1 }}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item }) => (
+          <Button transparent onPress={A => {}}>
+            <Text>{item.bem_publico}</Text>
+          </Button>
+        )}
+      />
+    </View>
+  );
+}
+
+function FiltrarBem(props) {
+  const config = useSelector(state => state.configs);
+  const bempublico = useSelector(state => state.bempublico);
+  const obra = useSelector(state => state.obra);
+  const dispatch = useDispatch();
+  const [value, setValue] = useState(null);
+  useEffect(() => {
+    return () => {
+      if (!config.showfiltrobem) setValue(null);
+    };
+  });
+  if (config.showfiltrobem) {
+    return (
+      <Card
+        style={{
+          position: "absolute",
+          top: 10,
+          zIndex: 10000,
+          elevation: 10,
+          backgroundColor: "#fff",
+          borderColor: "red"
+        }}
+      >
+        <CardItem style={{ paddingBottom: 0, paddingTop: 1 }}>
+          <Item>
+            <Icon name="ios-search" />
+            <Input
+              placeholder="Buscar Bem Público da Obra"
+              returnKeyType="send"
+              onChangeText={setValue}
+              value={value}
+              onEndEditing={ret => {
+                dispatch({ type: "FILTERBEMOBRA", filter: [] });
+                dispatch({ type: "TOOGLEFILTERBEMOBRA" });
+              }}
+            />
+          </Item>
+        </CardItem>
+        <CardItem style={{ paddingTop: 0, paddingBottom: 1 }} bordered>
+          <Button
+            transparent
+            onPress={A => {
+              dispatch({ type: "FILTERBEMOBRA", filter: [] });
+              dispatch({ type: "TOOGLEFILTERBEMOBRA" });
+            }}
+          >
+            <Text>Buscar</Text>
+          </Button>
+        </CardItem>
+        <CardItem
+          bordered
+          style={{
+            paddingTop: 0,
+            paddingBottom: 1,
+            height: 200
+          }}
+        >
+          <ListaBens bens={bempublico} />
+        </CardItem>
+      </Card>
+    );
+  } else return <View></View>;
+}
+
 function SearchBar(props) {
   const config = useSelector(state => state.configs);
   const obras = useSelector(state => state.obras);
@@ -63,6 +159,11 @@ function SearchBar(props) {
               value={value}
               onEndEditing={ret => {
                 const obra = getObra(obras, value);
+                const obra_bens = getBensPublicosObra(obras, obra);
+                if (obra_bens.length > 1) {
+                  dispatch({ type: "FILTERBEMOBRA", filter: obra_bens });
+                  dispatch({ type: "TOOGLEFILTERBEMOBRA" });
+                }
                 dispatch({ type: "SEARCHOBRAS", filter: obra });
                 dispatch({ type: "TOOGLESEARCH" });
               }}
@@ -74,6 +175,11 @@ function SearchBar(props) {
             transparent
             onPress={A => {
               const obra = getObra(obras, value);
+              const obra_bens = getBensPublicosObra(obras, obra);
+              if (obra_bens.length > 1) {
+                dispatch({ type: "FILTERBEMOBRA", filter: obra_bens });
+                dispatch({ type: "TOOGLEFILTERBEMOBRA" });
+              }
               dispatch({ type: "SEARCHOBRAS", filter: obra });
               dispatch({ type: "TOOGLESEARCH" });
             }}
@@ -115,11 +221,11 @@ function PhotosSelecionadas(props) {
 export default function Obras(props) {
   const obra = useSelector(state => state.obra);
   const dispatch = useDispatch();
-  console.log(obra === undefined, obra, Object.entries(obra).length);
   if (obra === undefined || Object.entries(obra).length == 0) {
     return (
       <View>
         <SearchBar navigation={props.navigation} />
+        <FiltrarBem navigation={props.navigation} />
         <Card>
           <CardItem bordered>
             <Text>Obra não encontrada</Text>
@@ -131,6 +237,7 @@ export default function Obras(props) {
   return (
     <View>
       <SearchBar navigation={props.navigation} />
+      <FiltrarBem navigation={props.navigation} />
       <Card>
         <CardItem bordered>
           <Text>

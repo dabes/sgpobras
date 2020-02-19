@@ -1,6 +1,7 @@
 configurationInitialState = {
   ip: null,
-  showsearch: false
+  showsearch: false,
+  showfiltrobem: false
 };
 
 export default function configs(state = configurationInitialState, action) {
@@ -20,7 +21,8 @@ export default function configs(state = configurationInitialState, action) {
       return {
         ...state
       };
-
+    case "TOOGLEFILTERBEMOBRA":
+      state.showfiltrobem = !state.showfiltrobem;
     default:
       return state;
   }
