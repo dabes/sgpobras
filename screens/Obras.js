@@ -32,8 +32,10 @@ function getObra(obras, text) {
 function getBensPublicosObra(obras, obra) {
   var filtro = [];
   for (var cada in obras) {
-    if (obras[cada].codigo == obra.codigo) {
-      filtro.push(obras[cada]);
+    if (obra !== undefined) {
+      if (obras[cada].codigo == obra.codigo) {
+        filtro.push(obras[cada]);
+      }
     }
   }
   return filtro;
@@ -41,9 +43,16 @@ function getBensPublicosObra(obras, obra) {
 
 function ListaBens(props) {
   const bens = props.bens;
+  const filter = props.filtro;
+  const dispatch = useDispatch();
   var filtro = [];
   for (var cada in bens) {
-    filtro.push(bens[cada]);
+    if (filter !== null) {
+      if (
+        bens[cada].bem_publico.toUpperCase().indexOf(filter.toUpperCase()) >= 0
+      )
+        filtro.push(bens[cada]);
+    } else filtro.push(bens[cada]);
   }
   return (
     <View style={{ flex: 1 }}>
@@ -52,7 +61,13 @@ function ListaBens(props) {
         style={{ flex: 1 }}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => (
-          <Button transparent onPress={A => {}}>
+          <Button
+            transparent
+            onPress={A => {
+              dispatch({ type: "SEARCHOBRAS", filter: item });
+              dispatch({ type: "TOOGLEFILTERBEMOBRA" });
+            }}
+          >
             <Text>{item.bem_publico}</Text>
           </Button>
         )}
@@ -118,7 +133,7 @@ function FiltrarBem(props) {
             height: 200
           }}
         >
-          <ListaBens bens={bempublico} />
+          <ListaBens bens={bempublico} filtro={value} />
         </CardItem>
       </Card>
     );
