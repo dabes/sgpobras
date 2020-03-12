@@ -4,7 +4,8 @@ import { View, ActivityIndicator, StatusBar } from "react-native";
 
 export default function NavigationRouter(props) {
   const configs = useSelector(state => state.configs);
-  props.navigation.navigate(configs.ip ? "Obras" : "Configuração");
+  props.navigation.navigate("Login");
+  // props.navigation.navigate(configs.ip ? "Obras" : "Configuração");
 
   return (
     <View>

@@ -4,6 +4,7 @@ import DrawerNavigator from "./DrawerNavigator";
 import NavigationRouter from "./NavigationRouter";
 import Galeria from "../screens/Galeria";
 import ShowPhoto from "../screens/ShowPhoto";
+import Login from "../screens/Login";
 
 export default createAppContainer(
   createSwitchNavigator(
@@ -11,7 +12,8 @@ export default createAppContainer(
       Main: DrawerNavigator,
       NavigationRouter: NavigationRouter,
       Galeria: Galeria,
-      ShowPhoto: ShowPhoto
+      ShowPhoto: ShowPhoto,
+      Login: Login
     },
     { initialRouteName: "NavigationRouter" }
   )

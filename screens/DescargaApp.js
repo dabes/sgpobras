@@ -6,52 +6,6 @@ import { useSelector, useDispatch } from "react-redux";
 import MenuHeader from "./MenuHeader";
 import axios from "axios";
 
-function DescarregaPhotosObras(obras, ip) {
-  for (var cada in obras) {
-    let count = 0;
-    obras[cada].photos.forEach((item, indice) => {
-      const nome = obras[cada].codigo + "_" + count;
-      const extension = item.split(".");
-      extension = extension[extension.length - 1];
-      var formData = new FormData();
-      formData.append("photo", {
-        uri: item,
-        name: nome + "." + extension,
-        filename: nome + "." + extension,
-        type: "image/" + extension
-      });
-      axios
-        .post("http://" + ip + "/api/obras_fotos", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data"
-          }
-        })
-        .catch(e => {
-          console.log(e);
-        });
-      count += 1;
-    });
-  }
-}
-
-function DescarregaObras(obras, ip) {
-  axios
-    .post(
-      "http://" + ip + "/api/obras",
-      {
-        data: JSON.stringify(obras)
-      },
-      {
-        headers: {
-          "Content-Type": "application/json"
-        }
-      }
-    )
-    .catch(e => {
-      console.log(e);
-    });
-}
-
 function DescargaApp(props) {
   const [onLoad, setonLoad] = useState(false);
   const dispatch = useDispatch();
@@ -83,42 +37,51 @@ function DescargaApp(props) {
                     }
                   }
                 )
+                .then(ret => {
+                  setTexto("Enviando Fotos das Obras");
+                  var total = 0;
+                  for (var cada in obras) {
+                    let count = 0;
+                    obras[cada].photos.forEach((item, indice) => {
+                      const nome =
+                        obras[cada].id +
+                        "_" +
+                        obras[cada].id_bem_publico +
+                        "_" +
+                        count;
+                      let extension = item.split(".");
+                      extension = extension[extension.length - 1];
+                      var formData = new FormData();
+                      formData.append("photo", {
+                        uri: item,
+                        name: nome + "." + extension,
+                        filename: nome + "." + extension,
+                        type: "image/" + extension
+                      });
+                      axios
+                        .post("http://" + ip + "/api/obras_fotos", formData, {
+                          headers: {
+                            "Content-Type": "multipart/form-data"
+                          }
+                        })
+                        .then(a => {
+                          setTexto("Enviando Foto " + total);
+                        })
+                        .catch(e => {
+                          setError(true);
+                          setTexto("Sem contato com o servidor!");
+                          console.log(e);
+                        });
+                      count += 1;
+                      total += 1;
+                    });
+                  }
+                })
                 .catch(e => {
+                  setError(true);
+                  setTexto("Sem contato com o servidor!");
                   console.log(e);
                 });
-              setTexto("Enviando Fotos das Obras");
-              var total = 0;
-              for (var cada in obras) {
-                let count = 0;
-                obras[cada].photos.forEach((item, indice) => {
-                  const nome = obras[cada].codigo + "_" + count;
-                  let extension = item.split(".");
-                  extension = extension[extension.length - 1];
-                  var formData = new FormData();
-                  formData.append("photo", {
-                    uri: item,
-                    name: nome + "." + extension,
-                    filename: nome + "." + extension,
-                    type: "image/" + extension
-                  });
-                  axios
-                    .post("http://" + ip + "/api/obras_fotos", formData, {
-                      headers: {
-                        "Content-Type": "multipart/form-data"
-                      }
-                    })
-                    .then(a => {
-                      setTexto("Enviando Foto " + total);
-                    })
-                    .catch(e => {
-                      setError(true);
-                      setTexto("Sem contato com o servidor!");
-                      console.log(e);
-                    });
-                  count += 1;
-                  total += 1;
-                });
-              }
               setTexto("Dados enviados");
             }}
             disabled={onLoad}
