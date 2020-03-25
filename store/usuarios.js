@@ -6,7 +6,7 @@ usuariosInitialState = [
   }
 ];
 
-export default function configs(state = usuariosInitialState, action) {
+export default function usuarios(state = usuariosInitialState, action) {
   switch (action.type) {
     case "LOGIN":
       return {

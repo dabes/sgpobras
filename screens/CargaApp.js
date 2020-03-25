@@ -16,8 +16,7 @@ function CargaApp(props) {
   return (
     <ScrollView
       style={styles.container}
-      contentContainerStyle={styles.contentContainer}
-    >
+      contentContainerStyle={styles.contentContainer}>
       <Card>
         <CardItem style={(styles.card, { justifyContent: "center" })}>
           <Button
@@ -40,8 +39,7 @@ function CargaApp(props) {
                 });
             }}
             disabled={onLoad}
-            activeOpacity={onLoad ? 1 : 0.5}
-          >
+            activeOpacity={onLoad ? 1 : 0.5}>
             <Text>{onLoad ? "Carregando Dados" : "Download dos Dados"}</Text>
           </Button>
         </CardItem>
@@ -82,8 +80,7 @@ function CargaApp(props) {
               onPress={a => {
                 setonLoad(false);
                 setError(false);
-              }}
-            >
+              }}>
               <Text>OK</Text>
             </Button>
           </CardItem>
